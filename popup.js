@@ -1,41 +1,52 @@
-
 document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById('updateButton').addEventListener('click', function () {
-        updateDetails();
-    });
+    fetchData();
 });
 
-
-function updateDetails() {
-    var name = document.getElementById("name").value
-    var age = document.getElementById("age").value
-    
-    const apiUrl = 'https://api.sheety.co/fb2c43f0e1959a2647bbc247a7c96b2a/sheetyTest/sheet1';
-
-    const newData = {
-        'sheet1': {
-            'name': name,
-            'age': age,
-        }
-    };
-
-    fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(newData)
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
+function fetchData() {
+    fetch('https://api.sheety.co/fb2c43f0e1959a2647bbc247a7c96b2a/sheetyTest/sheet1')
+        .then(response => response.json())
         .then(data => {
-            alert('Details updated successfully!');
+            displayData(data.sheet1);
         })
         .catch(error => {
-            alert('Error updating details. Please try again later.');
+            console.error('Error fetching data:', error);
         });
 }
+
+function displayData(data) {
+    const dataContainer = document.getElementById('dataContainer');
+    dataContainer.innerHTML = ''; 
+    if (data && data.length > 0) {
+      const lastThreeItems = data.slice(-3);
+  
+      const table = document.createElement('table');
+      table.classList.add('data-table');
+  
+      const headerRow = document.createElement('tr');
+      Object.keys(lastThreeItems[0]).forEach(key => {
+        const th = document.createElement('th');
+        th.textContent = key;
+        headerRow.appendChild(th);
+      });
+      table.appendChild(headerRow);
+  
+      lastThreeItems.forEach(item => {
+        const row = document.createElement('tr');
+        Object.values(item).forEach(value => {
+          const td = document.createElement('td');
+          td.textContent = value;
+          row.appendChild(td);
+        });
+        table.appendChild(row);
+      });
+  
+      dataContainer.appendChild(table);
+    } else {
+      const noDataMessage = document.createElement('div');
+      noDataMessage.classList.add('no-data');
+      noDataMessage.textContent = 'No data available.';
+      dataContainer.appendChild(noDataMessage);
+    }
+  }
+  
+  
