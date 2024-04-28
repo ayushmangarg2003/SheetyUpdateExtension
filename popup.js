@@ -1,16 +1,17 @@
-name = document.getElementById("name").value
-age = document.getElementById("age").value
+
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('updateButton').addEventListener('click', function () {
-        updateDetails(name, age);
+        updateDetails();
     });
 });
 
 
-
-function updateDetails(name, age) {
+function updateDetails() {
+    var name = document.getElementById("name").value
+    var age = document.getElementById("age").value
+    
     const apiUrl = 'https://api.sheety.co/fb2c43f0e1959a2647bbc247a7c96b2a/sheetyTest/sheet1';
-    console.log(name, age);
+
     const newData = {
         'sheet1': {
             'name': name,
